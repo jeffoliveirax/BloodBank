@@ -1,6 +1,6 @@
 ## BloodBank - API for blood bank management 🖥️
 
-#### **At the end of this project, the API BloodBank will be developed with clean architecture, repository pattern and CQRS and more, like you can see below.** 
+#### **At the end of this project, the API BloodBank will be developed with clean architecture, repository pattern, CQRS and more, like you can see below.** 
 
 ### *Technologies* ⌨️
 - ASP.NET Core 8
