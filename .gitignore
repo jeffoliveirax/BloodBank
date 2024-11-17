@@ -1,0 +1,96 @@
+# Sistema operacional
+####################
+# Arquivos de sistema do Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+.DS_Store
+
+# VS Code
+####################
+.vscode/
+
+# Visual Studio
+####################
+.vs/
+*.user
+*.suo
+*.userosscache
+*.sln.docstates
+
+# Diretórios de saída
+####################
+bin/
+obj/
+
+# Arquivos de build
+####################
+*.dll
+*.exe
+*.pdb
+*.cache
+*.mdb
+*.log
+*.csproj.user
+*.appx
+*.appxbundle
+*.msix
+*.msixbundle
+*.buildlog
+
+# Arquivos de pacotes
+####################
+*.nupkg
+*.snupkg
+
+# NuGet
+####################
+packages/
+*.nupkg
+*.snupkg
+project.lock.json
+project.fragment.lock.json
+artifacts/
+
+# .NET
+####################
+project.lock.json
+project.fragment.lock.json
+artifacts/
+**/bin
+**/obj
+*.dbmdl
+*.jfm
+
+# Diretórios de publicação
+####################
+.publish/
+publish/
+
+# Outros
+####################
+*.log
+*.tlog
+
+#Ignore thumbnails created by Windows
+#Ignore files built by Visual Studio
+*.obj
+*.aps
+*.pch
+*.vspscc
+*_i.c
+*_p.c
+*.ncb
+*.tlb
+*.tlh
+*.bak
+*.ilk
+[Bb]in
+[Dd]ebug*/
+*.lib
+*.sbr
+[Rr]elease*/
+_ReSharper*/
+[Tt]est[Rr]esult*
+#Nuget packages folder
