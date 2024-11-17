@@ -1,6 +1,6 @@
 ﻿namespace BloodBank.API.Entities
 {
-    public abstract class BaseEntity //abstrata pois nao será instanciada
+    public abstract class BaseEntity 
     {
         protected BaseEntity()
         {

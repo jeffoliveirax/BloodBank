@@ -3,10 +3,10 @@
     public class Doacao : BaseEntity
     {
         protected Doacao() { }
-        public Doacao(int doadorId, DateTime data, decimal volume) : base()
+        public Doacao(int doadorId, decimal volume) : base()
         {
             DoadorId = doadorId;
-            Data = data;
+            Data = DateTime.Now;
             Volume = volume;
         }
 
@@ -15,10 +15,13 @@
         public decimal Volume { get; private set; }
         public Doador Doador { get; private set; }
 
-        public void Create()
+        public void Update(int doadorId, decimal volume)
         {
-
+            DoadorId = doadorId;
+            Data = DateTime.Now;
+            Volume = volume;
         }
+
     }
 
 }

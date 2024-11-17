@@ -1,5 +1,4 @@
-﻿using BloodBank.API.Controllers;
-using BloodBank.API.Enum;
+﻿using BloodBank.API.Enum;
 
 namespace BloodBank.API.Entities
 {
@@ -34,9 +33,22 @@ namespace BloodBank.API.Entities
 
         }
 
-        public void Update()
+        public void Update(
+            string email, 
+            DateTime dataNascimento,
+            string genero,
+            double peso,
+            Endereco endereco,
+            TipoSanguineo tipoSanguineo,
+            FatorRh fatorRh)
         {
-
+            Email = email;
+            DataNascimento = dataNascimento;
+            Genero = genero;
+            Peso = peso;
+            Endereco = endereco;
+            TipoSanguineo = tipoSanguineo;
+            FatorRh = fatorRh;
         }
 
 

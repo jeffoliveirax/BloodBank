@@ -1,5 +1,7 @@
 ﻿using BloodBank.API.Models;
+using BloodBank.API.Persistence;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 
 namespace BloodBank.API.Controllers
 {
@@ -7,37 +9,83 @@ namespace BloodBank.API.Controllers
     [ApiController]
     public class DoacoesController : ControllerBase
     {
-        // POST api/Doacoes
-        [HttpPost]
-        public IActionResult Post(CreateDoacaoInputModel model)//Registro de doacoes
+        private readonly BloodBankDbContext _db;
+        public DoacoesController(BloodBankDbContext db)
         {
-            return CreatedAtAction(nameof(GetById), new { id = 1}, model);
+            _db = db;
+        }
+
+        [HttpPost]
+        public IActionResult Post(CreateDoacaoInputModel model)
+        {
+            var doacao = model.ToEntity();
+
+            _db.Doacoes.Add(doacao);
+            _db.SaveChanges();
+
+            return CreatedAtAction(nameof(GetById), new { id = 1 }, model);
         }
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            return NoContent();
+            var doacoes = _db.Doacoes
+                .Include(d => d.Doador)
+                .SingleOrDefault(d => d.Id == id);
+
+            if (doacoes is null)
+                return NotFound();
+
+            var model = DoacaoViewModel.FromEntity(doacoes);
+
+            return Ok(model);
         }
 
         [HttpGet]
-        public IActionResult GetAll()
+        public IActionResult Get(string search = "")
         {
-            return Ok();
+            var doacoes = _db.Doacoes
+                .Include(d => d.Doador)
+                .ToList();
+
+            var model = doacoes.Select(DoacoesItemViewModel.FromEntity).ToList();
+
+            return Ok(model);
         }
 
         [HttpPut("{id}")]
         public IActionResult Put(int id, UpdateDoacaoInputModel model)
         {
+            var doacao = _db.Doacoes.SingleOrDefault(d => d.Id == id);
+
+            if (doacao is null)
+                return NotFound();
+
+            doacao.Update(model.DoadorId, model.Volume);
+
+            _db.Doacoes.Update(doacao);
+            _db.SaveChanges();
+
             return NoContent();
         }
 
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
+            var doacao = _db.Doacoes.SingleOrDefault(d => d.Id == id);
+
+            if (doacao is null)
+                return NotFound();
+
+            doacao.SetAsDeleted();
+
+            _db.Doacoes.Update(doacao);
+            _db.SaveChanges();
+
             return NoContent();
         }
 
 
     }
 }
+
