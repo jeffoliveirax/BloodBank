@@ -10,9 +10,8 @@ namespace BloodBank.API.Controllers
     [ApiController]
     public class EstoqueController : ControllerBase
     {
-        //GET api/Estoque
         [HttpGet]
-        public IActionResult GetAll([FromServices] BloodBankDbContext db) //consulta total sangue por tipo disponível
+        public IActionResult GetAll([FromServices] BloodBankDbContext db) 
         {
             List<Estoque> estoque = CalcularEstoque(db.Doacoes.ToList(), db.Doadores.ToList());
 
@@ -26,7 +25,6 @@ namespace BloodBank.API.Controllers
             }
         }
 
-        //consulta doações últimos 30 dias e retorna dados dos doadores
         [HttpGet("last-30-days")]
         public IActionResult GetByDate([FromServices] BloodBankDbContext db)
         {
