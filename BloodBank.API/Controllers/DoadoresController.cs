@@ -14,7 +14,7 @@ namespace BloodBank.API.Controllers
         public DoadoresController(BloodBankDbContext db) => _db = db;
 
         [HttpPost]
-        public IActionResult Post([FromServices] BloodBankDbContext db, [FromBody] CreateDoadorInputModel model)//Cadastro de doadores
+        public IActionResult Post([FromServices] BloodBankDbContext db, [FromBody] CreateDoadorInputModel model)
         {
             var isThereAlreadyThisEmail = db.Doadores.Where(d => d.Email == model.Email).FirstOrDefault();
             if (isThereAlreadyThisEmail != null)

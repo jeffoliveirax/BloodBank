@@ -19,10 +19,6 @@ namespace BloodBank.API.Persistence
             builder.Entity<Doacao>(e =>
             {
                 e.HasKey(d => d.Id);
-
-                //e.HasOne(d => d.Doador)
-                //    .WithMany(e => e.Doacoes)
-                //    .HasForeignKey(d => d.DoadorId);
             });
 
             builder.Entity<Doador>(e =>
@@ -34,9 +30,9 @@ namespace BloodBank.API.Persistence
                      .HasForeignKey(d => d.DoadorId)
                      .OnDelete(DeleteBehavior.Restrict);
 
-                e.OwnsOne(d => d.Endereco, o => //utiliza-se para relacionar uma entidade sem criar uma tabela no banco, exclusiva para o endereço
+                e.OwnsOne(d => d.Endereco, o => 
                 {
-                    o.Property(o => o.Logradouro).HasColumnName("Logradouro"); //tratativa para não ficar com o nome da coluna Endereco_Logradouro
+                    o.Property(o => o.Logradouro).HasColumnName("Logradouro"); 
                     o.Property(o => o.Numero).HasColumnName("Numero");
                     o.Property(o => o.Bairro).HasColumnName("Bairro");
                     o.Property(o => o.Cidade).HasColumnName("Cidade");
