@@ -1,6 +1,6 @@
-﻿using BloodBank.API.Entities;
-using BloodBank.API.Models;
-using BloodBank.API.Persistence;
+﻿using BloodBank.Core.Entities;
+using BloodBank.Application.Models;
+using BloodBank.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 

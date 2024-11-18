@@ -1,7 +1,7 @@
-﻿using BloodBank.API.Entities;
-using BloodBank.API.Enum;
+﻿using BloodBank.Core.Entities;
+using BloodBank.Core.Enum;
 
-namespace BloodBank.API.Models
+namespace BloodBank.Application.Models
 {
     public class CreateDoadorInputModel
     {

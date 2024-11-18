@@ -1,4 +1,4 @@
-﻿namespace BloodBank.API.Models
+﻿namespace BloodBank.Application.Models
 {
     public class UpdateDoacaoInputModel
     {
