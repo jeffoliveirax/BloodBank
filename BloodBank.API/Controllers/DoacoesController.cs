@@ -18,13 +18,20 @@ namespace BloodBank.API.Controllers
         [HttpPost]
         public IActionResult Post(CreateDoacaoInputModel model)
         {
-            var doacao = model.ToEntity();
+            var doadorExiste = _db.Doadores.Any(d => d.Id == model.DoadorId);
 
+            if (!doadorExiste)
+            {
+                return NotFound("Id de doador não existe!");
+            }
+
+            var doacao = model.ToEntity();
             _db.Doacoes.Add(doacao);
             _db.SaveChanges();
 
-            return CreatedAtAction(nameof(GetById), new { id = 1 }, model);
+            return CreatedAtAction(nameof(GetById), new { id = doacao.Id }, model);
         }
+
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)

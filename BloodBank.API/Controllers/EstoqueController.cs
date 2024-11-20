@@ -64,6 +64,5 @@ namespace BloodBank.API.Controllers
             return estoque;
         }
 
-
     }
 }
