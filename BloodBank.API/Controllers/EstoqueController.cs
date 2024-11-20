@@ -1,8 +1,6 @@
-﻿using BloodBank.API.Entities;
-using BloodBank.API.Persistence;
-using Microsoft.AspNetCore.Http;
+﻿using BloodBank.Core.Entities;
+using BloodBank.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BloodBank.API.Controllers
 {
@@ -65,7 +63,6 @@ namespace BloodBank.API.Controllers
 
             return estoque;
         }
-
 
     }
 }

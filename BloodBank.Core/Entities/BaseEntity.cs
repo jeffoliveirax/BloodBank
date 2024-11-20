@@ -1,4 +1,4 @@
-﻿namespace BloodBank.API.Entities
+﻿namespace BloodBank.Core.Entities
 {
     public abstract class BaseEntity 
     {

@@ -1,6 +1,6 @@
-﻿using BloodBank.API.Enum;
+﻿using BloodBank.Core.Enum;
 
-namespace BloodBank.API.Models
+namespace BloodBank.Application.Models
 {
     public class EstoqueInputModel
     {

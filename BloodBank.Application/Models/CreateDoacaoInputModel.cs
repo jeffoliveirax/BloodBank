@@ -1,6 +1,6 @@
-﻿using BloodBank.API.Entities;
+﻿using BloodBank.Core.Entities;
 
-namespace BloodBank.API.Models
+namespace BloodBank.Application.Models
 {
     public class CreateDoacaoInputModel
     {

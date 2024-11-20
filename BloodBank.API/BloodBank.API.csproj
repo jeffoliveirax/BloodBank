@@ -27,4 +27,10 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.9.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\BloodBank.Application\BloodBank.Application.csproj" />
+    <ProjectReference Include="..\BloodBank.Core\BloodBank.Core.csproj" />
+    <ProjectReference Include="..\BloodBank.Infrastructure\BloodBank.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

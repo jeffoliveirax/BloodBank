@@ -1,7 +1,7 @@
-﻿using BloodBank.API.Entities;
+﻿using BloodBank.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 
-namespace BloodBank.API.Persistence
+namespace BloodBank.Infrastructure.Persistence
 {
     public class BloodBankDbContext : DbContext
     {
@@ -30,9 +30,9 @@ namespace BloodBank.API.Persistence
                      .HasForeignKey(d => d.DoadorId)
                      .OnDelete(DeleteBehavior.Restrict);
 
-                e.OwnsOne(d => d.Endereco, o => 
+                e.OwnsOne(d => d.Endereco, o =>
                 {
-                    o.Property(o => o.Logradouro).HasColumnName("Logradouro"); 
+                    o.Property(o => o.Logradouro).HasColumnName("Logradouro");
                     o.Property(o => o.Numero).HasColumnName("Numero");
                     o.Property(o => o.Bairro).HasColumnName("Bairro");
                     o.Property(o => o.Cidade).HasColumnName("Cidade");

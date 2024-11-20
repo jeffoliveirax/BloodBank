@@ -1,6 +1,6 @@
-﻿using BloodBank.API.Enum;
+﻿using BloodBank.Core.Enum;
 
-namespace BloodBank.API.Entities
+namespace BloodBank.Core.Entities
 {
     public class Doador : BaseEntity
     {

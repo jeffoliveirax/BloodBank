@@ -1,4 +1,4 @@
-using BloodBank.API.Persistence;
+using BloodBank.Infrastructure.Persistence;
 using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
