@@ -18,11 +18,54 @@ namespace BloodBank.API.Controllers
         [HttpPost]
         public IActionResult Post(CreateDoacaoInputModel model)
         {
-            var doadorExiste = _db.Doadores.Any(d => d.Id == model.DoadorId);
-
-            if (!doadorExiste)
+            var doador = _db.Doadores.SingleOrDefault(d => d.Id == model.DoadorId);
+            if (doador == null)
             {
                 return NotFound("Id de doador não existe!");
+            }
+
+            var idade = DateTime.Today.Year - doador.DataNascimento.Year;
+            if (doador.DataNascimento.Date > DateTime.Today.AddYears(-idade)) idade--;
+
+            if (idade < 18)
+            {
+                return BadRequest("O doador deve ter mais de 18 anos para efetuar uma doação.");
+            }
+
+            if (doador.Peso < 50)
+            {
+                return BadRequest("O doador deve pesar no mínimo 50kg para efetuar uma doação.");
+            }
+
+            if (doador.Genero.ToLower() == "feminino")
+            {
+                var ultimaDoacao = _db.Doacoes
+                    .Where(d => d.DoadorId == doador.Id)
+                    .OrderByDescending(d => d.Data)
+                    .FirstOrDefault();
+
+                if (ultimaDoacao != null && (DateTime.Today - ultimaDoacao.Data).TotalDays < 90)
+                {
+                    return BadRequest("Mulheres só podem doar de 90 em 90 dias.");
+                }
+            }
+
+            if (doador.Genero.ToLower() == "masculino")
+            {
+                var ultimaDoacao = _db.Doacoes
+                    .Where(d => d.DoadorId == doador.Id)
+                    .OrderByDescending(d => d.Data)
+                    .FirstOrDefault();
+
+                if (ultimaDoacao != null && (DateTime.Today - ultimaDoacao.Data).TotalDays < 60)
+                {
+                    return BadRequest("Homens só podem doar de 60 em 60 dias.");
+                }
+            }
+
+            if (model.Volume < 420 || model.Volume > 470)
+            {
+                return BadRequest("A quantidade de mililitros de sangue doados deve ser entre 420ml e 470ml.");
             }
 
             var doacao = model.ToEntity();
@@ -31,6 +74,8 @@ namespace BloodBank.API.Controllers
 
             return CreatedAtAction(nameof(GetById), new { id = doacao.Id }, model);
         }
+
+
 
 
         [HttpGet("{id}")]
