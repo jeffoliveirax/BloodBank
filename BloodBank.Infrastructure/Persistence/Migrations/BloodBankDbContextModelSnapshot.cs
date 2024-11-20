@@ -8,7 +8,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
 
-namespace BloodBank.API.Persistence.Migrations
+namespace BloodBank.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(BloodBankDbContext))]
     partial class BloodBankDbContextModelSnapshot : ModelSnapshot
@@ -22,7 +22,7 @@ namespace BloodBank.API.Persistence.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("BloodBank.API.Entities.Doacao", b =>
+            modelBuilder.Entity("BloodBank.Core.Entities.Doacao", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -52,7 +52,7 @@ namespace BloodBank.API.Persistence.Migrations
                     b.ToTable("Doacoes");
                 });
 
-            modelBuilder.Entity("BloodBank.API.Entities.Doador", b =>
+            modelBuilder.Entity("BloodBank.Core.Entities.Doador", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -95,7 +95,7 @@ namespace BloodBank.API.Persistence.Migrations
                     b.ToTable("Doadores");
                 });
 
-            modelBuilder.Entity("BloodBank.API.Entities.Estoque", b =>
+            modelBuilder.Entity("BloodBank.Core.Entities.Estoque", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
@@ -123,20 +123,20 @@ namespace BloodBank.API.Persistence.Migrations
                     b.ToTable("Estoques");
                 });
 
-            modelBuilder.Entity("BloodBank.API.Entities.Doacao", b =>
+            modelBuilder.Entity("BloodBank.Core.Entities.Doacao", b =>
                 {
-                    b.HasOne("BloodBank.API.Entities.Doador", "Doador")
+                    b.HasOne("BloodBank.Core.Entities.Doador", "Doador")
                         .WithMany("Doacoes")
                         .HasForeignKey("DoadorId")
-                        .OnDelete(DeleteBehavior.Cascade)
+                        .OnDelete(DeleteBehavior.Restrict)
                         .IsRequired();
 
                     b.Navigation("Doador");
                 });
 
-            modelBuilder.Entity("BloodBank.API.Entities.Doador", b =>
+            modelBuilder.Entity("BloodBank.Core.Entities.Doador", b =>
                 {
-                    b.OwnsOne("BloodBank.API.Entities.Endereco", "Endereco", b1 =>
+                    b.OwnsOne("BloodBank.Core.Entities.Endereco", "Endereco", b1 =>
                         {
                             b1.Property<int>("DoadorId")
                                 .HasColumnType("int");
@@ -182,7 +182,7 @@ namespace BloodBank.API.Persistence.Migrations
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("BloodBank.API.Entities.Doador", b =>
+            modelBuilder.Entity("BloodBank.Core.Entities.Doador", b =>
                 {
                     b.Navigation("Doacoes");
                 });

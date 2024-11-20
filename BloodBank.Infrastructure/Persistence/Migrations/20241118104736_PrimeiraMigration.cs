@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace BloodBank.API.Persistence.Migrations
+namespace BloodBank.Infrastructure.Persistence.Migrations
 {
     /// <inheritdoc />
     public partial class PrimeiraMigration : Migration
@@ -22,9 +22,16 @@ namespace BloodBank.API.Persistence.Migrations
                     DataNascimento = table.Column<DateTime>(type: "datetime2", nullable: false),
                     Genero = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     Peso = table.Column<double>(type: "float", nullable: false),
+                    Logradouro = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Numero = table.Column<int>(type: "int", nullable: false),
+                    Bairro = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Cidade = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Estado = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    CEP = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     TipoSanguineo = table.Column<int>(type: "int", nullable: false),
                     FatorRh = table.Column<int>(type: "int", nullable: false),
-                    EnderecoCompleto = table.Column<string>(type: "nvarchar(max)", nullable: false)
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -39,7 +46,9 @@ namespace BloodBank.API.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     TipoSanguineo = table.Column<int>(type: "int", nullable: false),
                     FatorRh = table.Column<int>(type: "int", nullable: false),
-                    Volume = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Volume = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -54,7 +63,9 @@ namespace BloodBank.API.Persistence.Migrations
                         .Annotation("SqlServer:Identity", "1, 1"),
                     DoadorId = table.Column<int>(type: "int", nullable: false),
                     Data = table.Column<DateTime>(type: "datetime2", nullable: false),
-                    Volume = table.Column<decimal>(type: "decimal(18,2)", nullable: false)
+                    Volume = table.Column<decimal>(type: "decimal(18,2)", nullable: false),
+                    CreatedAt = table.Column<DateTime>(type: "datetime2", nullable: false),
+                    IsDeleted = table.Column<bool>(type: "bit", nullable: false)
                 },
                 constraints: table =>
                 {
@@ -64,7 +75,7 @@ namespace BloodBank.API.Persistence.Migrations
                         column: x => x.DoadorId,
                         principalTable: "Doadores",
                         principalColumn: "Id",
-                        onDelete: ReferentialAction.Cascade);
+                        onDelete: ReferentialAction.Restrict);
                 });
 
             migrationBuilder.CreateIndex(
