@@ -12,8 +12,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace BloodBank.Infrastructure.Persistence.Migrations
 {
     [DbContext(typeof(BloodBankDbContext))]
-    [Migration("20241118104736_PrimeiraMigration")]
-    partial class PrimeiraMigration
+    [Migration("20241123235247_InitialMigration")]
+    partial class InitialMigration
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
