@@ -1,7 +1,7 @@
 ﻿using BloodBank.Application.Models;
+using BloodBank.Application.Services;
 using BloodBank.Infrastructure.Persistence;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 
 namespace BloodBank.API.Controllers
 {
@@ -9,114 +9,53 @@ namespace BloodBank.API.Controllers
     [ApiController]
     public class DoacoesController : ControllerBase
     {
-        private readonly BloodBankDbContext _db;
-        public DoacoesController(BloodBankDbContext db)
+        private readonly IDoacaoService _service;
+        public DoacoesController(IDoacaoService service)
         {
-            _db = db;
+            _service = service;
         }
 
         [HttpPost]
         public IActionResult Post(CreateDoacaoInputModel model)
         {
-            var doador = _db.Doadores.SingleOrDefault(d => d.Id == model.DoadorId);
-            if (doador == null)
-            {
-                return NotFound("Id de doador não existe!");
-            }
+            var result = _service.Insert(model);
 
-            var idade = DateTime.Today.Year - doador.DataNascimento.Year;
-            if (doador.DataNascimento.Date > DateTime.Today.AddYears(-idade)) idade--;
+            if (!result.IsSuccess)
+                return BadRequest(result.Message);
 
-            if (idade < 18)
-            {
-                return BadRequest("O doador deve ter mais de 18 anos para efetuar uma doação.");
-            }
-
-            if (doador.Peso < 50)
-            {
-                return BadRequest("O doador deve pesar no mínimo 50kg para efetuar uma doação.");
-            }
-
-            if (doador.Genero.ToLower() == "feminino")
-            {
-                var ultimaDoacao = _db.Doacoes
-                    .Where(d => d.DoadorId == doador.Id)
-                    .OrderByDescending(d => d.Data)
-                    .FirstOrDefault();
-
-                if (ultimaDoacao != null && (DateTime.Today - ultimaDoacao.Data).TotalDays < 90)
-                {
-                    return BadRequest("Mulheres só podem doar de 90 em 90 dias.");
-                }
-            }
-
-            if (doador.Genero.ToLower() == "masculino")
-            {
-                var ultimaDoacao = _db.Doacoes
-                    .Where(d => d.DoadorId == doador.Id)
-                    .OrderByDescending(d => d.Data)
-                    .FirstOrDefault();
-
-                if (ultimaDoacao != null && (DateTime.Today - ultimaDoacao.Data).TotalDays < 60)
-                {
-                    return BadRequest("Homens só podem doar de 60 em 60 dias.");
-                }
-            }
-
-            if (model.Volume < 420 || model.Volume > 470)
-            {
-                return BadRequest("A quantidade de mililitros de sangue doados deve ser entre 420ml e 470ml.");
-            }
-
-            var doacao = model.ToEntity();
-            _db.Doacoes.Add(doacao);
-            _db.SaveChanges();
-
-            return CreatedAtAction(nameof(GetById), new { id = doacao.Id }, model);
+            return CreatedAtAction(nameof(GetById), new { id = result.Data }, model);
         }
-
-
 
 
         [HttpGet("{id}")]
         public IActionResult GetById(int id)
         {
-            var doacoes = _db.Doacoes
-                .Include(d => d.Doador)
-                .SingleOrDefault(d => d.Id == id);
+            var result = _service.GetById(id);
 
-            if (doacoes is null)
-                return NotFound();
+            if (!result.IsSuccess)
+                return BadRequest(result.Message);
 
-            var model = DoacaoViewModel.FromEntity(doacoes);
-
-            return Ok(model);
+            return Ok(result.Data);
         }
 
         [HttpGet]
-        public IActionResult Get(string search = "")
+        public IActionResult GetAll(string search = "")
         {
-            var doacoes = _db.Doacoes
-                .Include(d => d.Doador)
-                .ToList();
+            var result = _service.GetAll();
 
-            var model = doacoes.Select(DoacoesItemViewModel.FromEntity).ToList();
+            if (!result.IsSuccess)
+                return BadRequest(result.Message);
 
-            return Ok(model);
+            return Ok(result.Data);
         }
 
         [HttpPut("{id}")]
         public IActionResult Put(int id, UpdateDoacaoInputModel model)
         {
-            var doacao = _db.Doacoes.SingleOrDefault(d => d.Id == id);
+            var result = _service.Update(id, model);
 
-            if (doacao is null)
-                return NotFound();
-
-            doacao.Update(model.DoadorId, model.Volume);
-
-            _db.Doacoes.Update(doacao);
-            _db.SaveChanges();
+            if (!result.IsSuccess)
+                return BadRequest(result.Message);
 
             return NoContent();
         }
@@ -124,15 +63,10 @@ namespace BloodBank.API.Controllers
         [HttpDelete("{id}")]
         public IActionResult Delete(int id)
         {
-            var doacao = _db.Doacoes.SingleOrDefault(d => d.Id == id);
+            var result = _service.Delete(id); 
 
-            if (doacao is null)
-                return NotFound();
-
-            doacao.SetAsDeleted();
-
-            _db.Doacoes.Update(doacao);
-            _db.SaveChanges();
+            if (!result.IsSuccess)
+                return BadRequest(result.Message);
 
             return NoContent();
         }
