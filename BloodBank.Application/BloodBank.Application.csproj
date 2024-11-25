@@ -7,8 +7,24 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="MediatR" Version="12.4.1" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\BloodBank.Core\BloodBank.Core.csproj" />
     <ProjectReference Include="..\BloodBank.Infrastructure\BloodBank.Infrastructure.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Commands\InsertDoador\" />
+    <Folder Include="Commands\UpdateDoacao\" />
+    <Folder Include="Commands\UpdateDoador\" />
+    <Folder Include="Query\GetDoadorById\" />
+    <Folder Include="Query\GetDoadoresAll\" />
+    <Folder Include="Query\GetDoacaoById\" />
+    <Folder Include="Query\GetDoacoesAll\" />
+    <Folder Include="Query\GetEstoque\" />
+    <Folder Include="Query\GetEstoqueLast30Days\" />
   </ItemGroup>
 
 </Project>
