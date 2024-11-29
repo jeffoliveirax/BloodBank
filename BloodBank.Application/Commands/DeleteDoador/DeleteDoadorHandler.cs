@@ -13,7 +13,7 @@ namespace BloodBank.Application.Commands.DeleteDoador
         {
             var doador = await _db.Doadores.SingleOrDefaultAsync(d => d.Id == request.Id);
 
-            if (doador is null)
+            if (doador is null || doador.IsDeleted)
                 return ResultViewModel.Error("Este doador não existe.");
 
             doador.SetAsDeleted();

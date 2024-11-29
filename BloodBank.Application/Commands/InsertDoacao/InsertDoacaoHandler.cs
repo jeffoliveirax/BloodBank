@@ -6,14 +6,14 @@ using Microsoft.EntityFrameworkCore;
 
 namespace BloodBank.Application.Commands.InsertDoacao
 {
-    public class InsertDoacaoHandler : IRequestHandler<InsertDoacaoCommand, ResultViewModel>
+    public class InsertDoacaoHandler : IRequestHandler<InsertDoacaoCommand, ResultViewModel<int>>
     {
         private readonly BloodBankDbContext _db;
         public InsertDoacaoHandler(BloodBankDbContext db)
         {
             _db = db;
         }
-        public async Task<ResultViewModel> Handle(InsertDoacaoCommand request, CancellationToken cancellationToken)
+        public async Task<ResultViewModel<int>> Handle(InsertDoacaoCommand request, CancellationToken cancellationToken)
         {
             var doador = await _db.Doadores.SingleOrDefaultAsync(d => d.Id == request.DoadorId);
             if (doador == null)
@@ -65,9 +65,9 @@ namespace BloodBank.Application.Commands.InsertDoacao
                 return ResultViewModel<int>.Error("A quantidade de mililitros de sangue doados deve ser entre 420ml e 470ml.");
             }
 
-            var doacao = new Doacao(request.DoadorId, request.Volume);
+            var doacao = request.ToEntity();
 
-            _db.Doacoes.Add(doacao);
+            await _db.Doacoes.AddAsync(doacao);
             await _db.SaveChangesAsync();
 
             return ResultViewModel<int>.Success(doacao.Id);
