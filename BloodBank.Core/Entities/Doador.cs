@@ -4,7 +4,7 @@ namespace BloodBank.Core.Entities
 {
     public class Doador : BaseEntity
     {
-        protected Doador() { }
+        public Doador() { }
         public Doador(string nomeCompleto, string email, DateTime dataNascimento, string genero, double peso, Endereco endereco, TipoSanguineo tipoSanguineo, FatorRh fatorRh) : base()
         {
             NomeCompleto = nomeCompleto;

@@ -1,6 +1,11 @@
-﻿using BloodBank.Application.Models;
+﻿using BloodBank.Application.Commands.DeleteDoacao;
+using BloodBank.Application.Commands.InsertDoacao;
+using BloodBank.Application.Commands.UpdateDoacao;
+using BloodBank.Application.Models;
+using BloodBank.Application.Query.GetDoacaoById;
+using BloodBank.Application.Query.GetDoacoesAll;
 using BloodBank.Application.Services;
-using BloodBank.Infrastructure.Persistence;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BloodBank.API.Controllers
@@ -9,28 +14,28 @@ namespace BloodBank.API.Controllers
     [ApiController]
     public class DoacoesController : ControllerBase
     {
-        private readonly IDoacaoService _service;
-        public DoacoesController(IDoacaoService service)
+        private readonly IMediator _mediator;
+        public DoacoesController(IMediator mediator)
         {
-            _service = service;
+            _mediator = mediator;
         }
 
         [HttpPost]
-        public IActionResult Post(CreateDoacaoInputModel model)
+        public async Task<IActionResult> Post(InsertDoacaoCommand command)
         {
-            var result = _service.Insert(model);
+            var result = await _mediator.Send(command);
 
             if (!result.IsSuccess)
                 return BadRequest(result.Message);
 
-            return CreatedAtAction(nameof(GetById), new { id = result.Data }, model);
+            return CreatedAtAction(nameof(GetById), new { id = result.Data }, command);
         }
 
 
         [HttpGet("{id}")]
-        public IActionResult GetById(int id)
+        public async Task<IActionResult> GetById(int id)
         {
-            var result = _service.GetById(id);
+            var result = await _mediator.Send(new GetDoacaoByIdQuery(id));
 
             if (!result.IsSuccess)
                 return BadRequest(result.Message);
@@ -39,9 +44,9 @@ namespace BloodBank.API.Controllers
         }
 
         [HttpGet]
-        public IActionResult GetAll(string search = "")
+        public async Task<IActionResult> GetAll(string search = "")
         {
-            var result = _service.GetAll();
+            var result = await _mediator.Send(new GetDoacoesAllQuery());
 
             if (!result.IsSuccess)
                 return BadRequest(result.Message);
@@ -49,10 +54,10 @@ namespace BloodBank.API.Controllers
             return Ok(result.Data);
         }
 
-        [HttpPut("{id}")]
-        public IActionResult Put(int id, UpdateDoacaoInputModel model)
+        [HttpPut]
+        public async Task<IActionResult> Put(UpdateDoacaoCommand command)
         {
-            var result = _service.Update(id, model);
+            var result = await _mediator.Send(command);
 
             if (!result.IsSuccess)
                 return BadRequest(result.Message);
@@ -61,9 +66,9 @@ namespace BloodBank.API.Controllers
         }
 
         [HttpDelete("{id}")]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult>  Delete(int id)
         {
-            var result = _service.Delete(id); 
+            var result = await _mediator.Send(new DeleteDoacaoCommand(id)); 
 
             if (!result.IsSuccess)
                 return BadRequest(result.Message);

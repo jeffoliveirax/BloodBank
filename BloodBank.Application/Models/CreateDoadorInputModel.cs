@@ -1,5 +1,6 @@
 ﻿using BloodBank.Core.Entities;
 using BloodBank.Core.Enum;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 
 namespace BloodBank.Application.Models
 {
@@ -13,5 +14,8 @@ namespace BloodBank.Application.Models
         public TipoSanguineo TipoSanguineo { get; set; }
         public FatorRh FatorRh { get; set; }
         public Endereco Endereco { get; set; }
+
+        public Doador ToEntity()
+            => new(NomeCompleto, Email, DataNascimento, Genero, Peso, Endereco, TipoSanguineo, FatorRh);
     }
 }
