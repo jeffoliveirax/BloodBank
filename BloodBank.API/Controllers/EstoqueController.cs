@@ -1,6 +1,9 @@
-﻿using BloodBank.Application.Services;
+﻿using BloodBank.Application.Query.GetEstoque;
+using BloodBank.Application.Query.GetEstoqueLast30Days;
+using BloodBank.Application.Services;
 using BloodBank.Core.Entities;
 using BloodBank.Infrastructure.Persistence;
+using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
 namespace BloodBank.API.Controllers
@@ -9,14 +12,16 @@ namespace BloodBank.API.Controllers
     [ApiController]
     public class EstoqueController : ControllerBase
     {
-        private readonly IEstoqueService _service;
-        public EstoqueController(IEstoqueService service) 
-            => _service = service;
+        private readonly IMediator _mediator;
+        public EstoqueController(IMediator mediator)
+        {
+            _mediator = mediator;
+        }
 
         [HttpGet]
-        public IActionResult GetAll() 
+        public async Task<IActionResult> GetAll() 
         {
-            var result = _service.GetAll();
+            var result = await _mediator.Send(new GetEstoqueAllQuery());
 
             if (!result.IsSuccess) 
                 return NotFound(result.Message);
@@ -25,9 +30,9 @@ namespace BloodBank.API.Controllers
         }
 
         [HttpGet("last-30-days")]
-        public IActionResult GetByDate()
+        public async Task<IActionResult> GetByDate()
         {
-            var result = _service.GetByDate();
+            var result = await _mediator.Send(new GetEstoqueLast30DaysQuery());
 
             if (!result.IsSuccess)
                 return NotFound(result.Message);
