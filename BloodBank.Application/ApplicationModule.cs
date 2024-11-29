@@ -1,4 +1,5 @@
-﻿using BloodBank.Application.Services;
+﻿using BloodBank.Application.Commands.InsertDoador;
+using BloodBank.Application.Services;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace BloodBank.Application
@@ -7,7 +8,10 @@ namespace BloodBank.Application
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddServices();
+            services
+                .AddServices()
+                .AddHandlers();
+
             return services;
         }
 
@@ -16,6 +20,15 @@ namespace BloodBank.Application
             services.AddScoped<IDoacaoService, DoacaoService>();
             services.AddScoped<IDoadorService, DoadorService>();
             services.AddScoped<IEstoqueService, EstoqueService>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddHandlers(this IServiceCollection services)
+        {
+            services.AddMediatR(config => 
+                config.RegisterServicesFromAssemblyContaining<InsertDoadorCommand>());
+
             return services;
         }
     }
