@@ -1,10 +1,8 @@
 ﻿using BloodBank.Application.Commands.DeleteDoacao;
 using BloodBank.Application.Commands.InsertDoacao;
 using BloodBank.Application.Commands.UpdateDoacao;
-using BloodBank.Application.Models;
 using BloodBank.Application.Query.GetDoacaoById;
 using BloodBank.Application.Query.GetDoacoesAll;
-using BloodBank.Application.Services;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

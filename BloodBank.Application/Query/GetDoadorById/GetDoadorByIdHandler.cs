@@ -1,27 +1,26 @@
 ﻿using BloodBank.Application.Models;
 using BloodBank.Core.Entities;
-using BloodBank.Infrastructure.Persistence;
+using BloodBank.Core.Repositories;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace BloodBank.Application.Query.GetDoadorById
 {
-    public class GetDoadorByIdHandler : IRequestHandler<GetDoadorByIdQuery, ResultViewModel<Doador>>
+    public class GetDoadorByIdHandler : IRequestHandler<GetDoadorByIdQuery, ResultViewModel<Core.Entities.Doador>>
     {
-        private readonly BloodBankDbContext _db;
-        public GetDoadorByIdHandler(BloodBankDbContext db)
+        private readonly IDoadorRepository _repository;
+        public GetDoadorByIdHandler(IDoadorRepository repository)
         {
-            _db = db;
+            _repository = repository;
         }
 
-        public async Task<ResultViewModel<Doador>> Handle(GetDoadorByIdQuery request, CancellationToken cancellationToken)
+        public async Task<ResultViewModel<Core.Entities.Doador>> Handle(GetDoadorByIdQuery request, CancellationToken cancellationToken)
         {
-            var doador = await _db.Doadores.Where(d => d.Id == request.Id).FirstOrDefaultAsync();
+            var doador = await _repository.GetById(request.Id);
 
             if (doador is null)
-                return ResultViewModel<Doador>.Error("Não há doador cadastrado com esse Id.");
+                return ResultViewModel<Core.Entities.Doador>.Error("Não há doador cadastrado com esse Id.");
 
-            return ResultViewModel<Doador>.Success(doador);
+            return ResultViewModel<Core.Entities.Doador>.Success(doador);
         }
     }
 }

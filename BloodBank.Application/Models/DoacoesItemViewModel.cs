@@ -19,7 +19,7 @@ namespace BloodBank.Application.Models
         public decimal Volume { get; private set; }
         public string NomeDoador { get; private set; }
 
-        public static DoacoesItemViewModel FromEntity(Doacao doacao)
+        public static DoacoesItemViewModel ToEntity(Doacao doacao)
             => new(doacao.Id, doacao.DoadorId, doacao.Data, doacao.Volume, doacao.Doador.NomeCompleto);
     }
 }

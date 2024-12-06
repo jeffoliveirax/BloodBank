@@ -1,11 +1,7 @@
-﻿using BloodBank.Application.Models;
-using BloodBank.Infrastructure.Persistence;
-using Microsoft.AspNetCore.Mvc;
-using BloodBank.Application.Services;
+﻿using Microsoft.AspNetCore.Mvc;
 using MediatR;
 using BloodBank.Application.Commands.InsertDoador;
 using BloodBank.Application.Query.GetDoadorById;
-using BloodBank.Application.Query.GetEstoque;
 using BloodBank.Application.Query.GetDoadoresAll;
 using BloodBank.Application.Commands.UpdateDoador;
 using BloodBank.Application.Commands.DeleteDoador;
@@ -26,6 +22,11 @@ namespace BloodBank.API.Controllers
         public async Task<IActionResult> Post(InsertDoadorCommand command)
         {
             var result = await _mediator.Send(command);
+
+            if (!result.IsSuccess)
+            {
+                return BadRequest(result.Message);
+            }
 
             return CreatedAtAction(nameof(GetById), new { id = result.Data }, command);
         }

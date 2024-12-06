@@ -1,5 +1,6 @@
 ﻿using Azure.Core;
 using BloodBank.Application.Models;
+using BloodBank.Core.Repositories;
 using BloodBank.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -8,22 +9,21 @@ namespace BloodBank.Application.Commands.UpdateDoacao
 {
     public class UpdateDoacaoHandler : IRequestHandler<UpdateDoacaoCommand, ResultViewModel>
     {
-        private readonly BloodBankDbContext _db;
-        public UpdateDoacaoHandler(BloodBankDbContext db)
+        private readonly IDoacaoRepository _repository;
+        public UpdateDoacaoHandler(IDoacaoRepository repository)
         {
-            _db = db;
+            _repository = repository;
         }
         public async Task<ResultViewModel> Handle(UpdateDoacaoCommand request, CancellationToken cancellationToken)
         {
-            var doacao = await _db.Doacoes.SingleOrDefaultAsync(d => d.Id == request.Id);
+            var doacao = await _repository.GetById(request.Id);
 
             if (doacao is null)
                 return ResultViewModel.Error("A doação não existe.");
 
             doacao.Update(request.DoadorId, request.Volume);
 
-            _db.Doacoes.Update(doacao);
-            await _db.SaveChangesAsync();
+            await _repository.Update(doacao);
 
             return ResultViewModel.Success();
         }

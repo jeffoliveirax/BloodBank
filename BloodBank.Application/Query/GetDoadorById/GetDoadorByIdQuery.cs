@@ -5,7 +5,7 @@ using MediatR;
 
 namespace BloodBank.Application.Query.GetDoadorById
 {
-    public class GetDoadorByIdQuery : IRequest<ResultViewModel<Doador>>
+    public class GetDoadorByIdQuery : IRequest<ResultViewModel<Core.Entities.Doador>>
     {
         public GetDoadorByIdQuery(int id)
         {

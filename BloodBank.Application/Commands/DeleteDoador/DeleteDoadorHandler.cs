@@ -1,4 +1,5 @@
 ﻿using BloodBank.Application.Models;
+using BloodBank.Core.Repositories;
 using BloodBank.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -7,19 +8,20 @@ namespace BloodBank.Application.Commands.DeleteDoador
 {
     public class DeleteDoadorHandler : IRequestHandler<DeleteDoadorCommand, ResultViewModel>
     {
-        private readonly BloodBankDbContext _db;
-        public DeleteDoadorHandler(BloodBankDbContext db) => _db = db;
+        private readonly IDoadorRepository _repository;
+        public DeleteDoadorHandler(IDoadorRepository repository)
+        {
+            _repository = repository;
+        }
+
         public async Task<ResultViewModel> Handle(DeleteDoadorCommand request, CancellationToken cancellationToken)
         {
-            var doador = await _db.Doadores.SingleOrDefaultAsync(d => d.Id == request.Id);
+            var existDoador = await _repository.GetById(request.Id);
 
-            if (doador is null || doador.IsDeleted)
+            if (existDoador is null)
                 return ResultViewModel.Error("Este doador não existe.");
 
-            doador.SetAsDeleted();
-
-            _db.Doadores.Update(doador);
-            await _db.SaveChangesAsync();
+            await _repository.Delete(request.Id);
 
             return ResultViewModel.Success();
         }

@@ -1,5 +1,6 @@
 ﻿using BloodBank.Application.Models;
 using BloodBank.Core.Entities;
+using BloodBank.Core.Repositories;
 using BloodBank.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -8,28 +9,24 @@ namespace BloodBank.Application.Commands.InsertDoador
 {
     public class InsertDoadorHandler : IRequestHandler<InsertDoadorCommand, ResultViewModel<int>>
     {
-        private readonly BloodBankDbContext _db;
-        public InsertDoadorHandler(BloodBankDbContext db)
+        private readonly IDoadorRepository _repository;
+        public InsertDoadorHandler(IDoadorRepository repository)
         {
-            _db = db;
+            _repository = repository;
         }
 
         public async Task<ResultViewModel<int>> Handle(InsertDoadorCommand request, CancellationToken cancellationToken)
         {
-            var isThereAlreadyThisEmail = await _db.Doadores
-                .Where(d => d.Email == request.Email)
-                .FirstOrDefaultAsync();
+            var existEmail = await _repository.Exists(request.Email);
 
-            if (isThereAlreadyThisEmail != null)
+            if (existEmail)
             {
                 return ResultViewModel<int>.Error("Já existe um usuário cadastrado com este e-mail");
             }
 
             var doador = request.ToEntity();
 
-            await _db.Doadores.AddAsync(doador);
-
-            await _db.SaveChangesAsync();
+            await _repository.Insert(doador);
 
             return ResultViewModel<int>.Success(doador.Id);
         }

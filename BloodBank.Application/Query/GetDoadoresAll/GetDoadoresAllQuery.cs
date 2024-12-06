@@ -4,7 +4,7 @@ using MediatR;
 
 namespace BloodBank.Application.Query.GetDoadoresAll
 {
-    public class GetDoadoresAllQuery : IRequest<ResultViewModel<List<Doador>>>
+    public class GetDoadoresAllQuery : IRequest<ResultViewModel<List<Core.Entities.Doador>>>
     {
         public GetDoadoresAllQuery(int pageNumber, int pageSize)
         {

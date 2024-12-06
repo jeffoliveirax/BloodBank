@@ -1,27 +1,24 @@
 ﻿using BloodBank.Application.Models;
-using BloodBank.Infrastructure.Persistence;
+using BloodBank.Core.Repositories;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace BloodBank.Application.Query.GetDoacaoById
 {
     public class GetDoacaoByIdHandler : IRequestHandler<GetDoacaoByIdQuery, ResultViewModel<DoacaoViewModel>>
     {
-        private readonly BloodBankDbContext _db;
-        public GetDoacaoByIdHandler(BloodBankDbContext db)
+        private readonly IDoacaoRepository _repository;
+        public GetDoacaoByIdHandler(IDoacaoRepository repository)
         {
-            _db = db;
+            _repository = repository;
         }
         public async Task<ResultViewModel<DoacaoViewModel>> Handle(GetDoacaoByIdQuery request, CancellationToken cancellationToken)
         {
-            var doacoes = await _db.Doacoes
-               .Include(d => d.Doador)
-               .SingleOrDefaultAsync(d => d.Id == request.Id);
+            var doacao = await _repository.GetById(request.Id);
 
-            if (doacoes is null)
+            if (doacao is null)
                 return ResultViewModel<DoacaoViewModel>.Error("Doação não existe.");
 
-            var model = DoacaoViewModel.FromEntity(doacoes);
+            var model = DoacaoViewModel.FromEntity(doacao);
 
             return ResultViewModel<DoacaoViewModel>.Success(model);
         }
