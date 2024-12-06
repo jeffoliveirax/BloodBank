@@ -1,8 +1,5 @@
 ﻿using BloodBank.Application.Query.GetEstoque;
 using BloodBank.Application.Query.GetEstoqueLast30Days;
-using BloodBank.Application.Services;
-using BloodBank.Core.Entities;
-using BloodBank.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 

@@ -1,26 +1,30 @@
 ﻿using BloodBank.Application.Models;
 using BloodBank.Core.Entities;
+using BloodBank.Core.Repositories;
 using BloodBank.Infrastructure.Persistence;
 using MediatR;
 
 namespace BloodBank.Application.Query.GetDoadoresAll
 {
-    public class GetDoadoresAllHandler : IRequestHandler<GetDoadoresAllQuery, ResultViewModel<List<Doador>>>
+    public class GetDoadoresAllHandler : IRequestHandler<GetDoadoresAllQuery, ResultViewModel<List<Core.Entities.Doador>>>
     {
         private readonly BloodBankDbContext _db;
-        public GetDoadoresAllHandler(BloodBankDbContext db) => _db = db;
-        public async Task<ResultViewModel<List<Doador>>> Handle(GetDoadoresAllQuery request, CancellationToken cancellationToken)
+        private readonly IDoadorRepository _repository;
+        public GetDoadoresAllHandler(BloodBankDbContext db, IDoadorRepository repository)
+        {
+            _db = db;
+            _repository = repository;
+        }
+
+        public async Task<ResultViewModel<List<Core.Entities.Doador>>> Handle(GetDoadoresAllQuery request, CancellationToken cancellationToken)
         {
             var pageSize = request.PageSize;
             var pageNumber = request.PageNumber;
 
-            var totalItems = _db.Doadores.Count();
+            var (doadores, totalItems) = await _repository.GetAll(pageNumber, pageSize);
+
             var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 
-            var doadores = _db.Doadores
-                              .Skip((pageNumber - 1) * pageSize)
-                              .Take(pageSize)
-                              .ToList();
             if (doadores is null)
                 return ResultViewModel<List<Doador>>.Error("Não há doadores cadastrados.");
 

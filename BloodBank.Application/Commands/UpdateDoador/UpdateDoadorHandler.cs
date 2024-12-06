@@ -1,21 +1,19 @@
-﻿using Azure.Core;
-using BloodBank.Application.Models;
-using BloodBank.Infrastructure.Persistence;
+﻿using BloodBank.Application.Models;
+using BloodBank.Core.Repositories;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace BloodBank.Application.Commands.UpdateDoador
 {
     public class UpdateDoadorHandler : IRequestHandler<UpdateDoadorCommand, ResultViewModel>
     {
-        private readonly BloodBankDbContext _db;
-        public UpdateDoadorHandler(BloodBankDbContext db)
+        private readonly IDoadorRepository _repository;
+        public UpdateDoadorHandler(IDoadorRepository repository)
         {
-            _db = db;
+            _repository = repository;
         }
         public async Task<ResultViewModel> Handle(UpdateDoadorCommand request, CancellationToken cancellationToken)
         {
-            var doador = await _db.Doadores.SingleOrDefaultAsync(d => d.Id == request.Id);
+            var doador = await _repository.GetById(request.Id);
 
             if (doador is null) return ResultViewModel.Error("Este doador não existe.");
 
@@ -28,8 +26,7 @@ namespace BloodBank.Application.Commands.UpdateDoador
                 request.TipoSanguineo,
                 request.FatorRh);
 
-            _db.Doadores.Update(doador);
-            await _db.SaveChangesAsync();
+            await _repository.Update(doador);
 
             return ResultViewModel.Success();
         }

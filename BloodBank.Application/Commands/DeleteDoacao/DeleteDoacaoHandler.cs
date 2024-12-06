@@ -1,29 +1,25 @@
 ﻿using BloodBank.Application.Models;
-using BloodBank.Infrastructure.Persistence;
+using BloodBank.Core.Repositories;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
 
 namespace BloodBank.Application.Commands.DeleteDoacao
 {
     public class DeleteDoacaoHandler : IRequestHandler<DeleteDoacaoCommand, ResultViewModel>
     {
-        private readonly BloodBankDbContext _db;
-        public DeleteDoacaoHandler(BloodBankDbContext db)
+        private readonly IDoacaoRepository _repository;
+        public DeleteDoacaoHandler(IDoacaoRepository repository)
         {
-            _db = db;
+            _repository = repository;
         }
 
         public async Task<ResultViewModel> Handle(DeleteDoacaoCommand request, CancellationToken cancellationToken)
         {
-            var doacao = await _db.Doacoes.SingleOrDefaultAsync(d => d.Id == request.Id);
+            var doacao = await _repository.Exists(request.Id);
 
-            if (doacao is null || doacao.IsDeleted)
+            if (!doacao)
                 return ResultViewModel.Error("A doação não existe.");
 
-            doacao.SetAsDeleted();
-
-            _db.Doacoes.Update(doacao);
-            await _db.SaveChangesAsync();
+            await _repository.Delete(request.Id);
 
             return ResultViewModel.Success();
         }

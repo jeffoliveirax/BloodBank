@@ -1,5 +1,6 @@
 ﻿using BloodBank.Application.Models;
 using BloodBank.Core.Entities;
+using BloodBank.Core.Repositories;
 using BloodBank.Infrastructure.Persistence;
 using MediatR;
 using Microsoft.EntityFrameworkCore;
@@ -8,14 +9,16 @@ namespace BloodBank.Application.Commands.InsertDoacao
 {
     public class InsertDoacaoHandler : IRequestHandler<InsertDoacaoCommand, ResultViewModel<int>>
     {
-        private readonly BloodBankDbContext _db;
-        public InsertDoacaoHandler(BloodBankDbContext db)
+        private readonly IDoacaoRepository _repDonation;
+        private readonly IDoadorRepository _repDonor;
+        public InsertDoacaoHandler(IDoacaoRepository repDonation, IDoadorRepository repDonor)
         {
-            _db = db;
+            _repDonation = repDonation;
+            _repDonor = repDonor;
         }
         public async Task<ResultViewModel<int>> Handle(InsertDoacaoCommand request, CancellationToken cancellationToken)
         {
-            var doador = await _db.Doadores.SingleOrDefaultAsync(d => d.Id == request.DoadorId);
+            var doador = await _repDonor.GetById(request.DoadorId);
             if (doador == null)
             {
                 return ResultViewModel<int>.Error("Id de doador não existe!");
@@ -36,11 +39,8 @@ namespace BloodBank.Application.Commands.InsertDoacao
 
             if (doador.Genero.ToLower() == "feminino")
             {
-                var ultimaDoacao = await _db.Doacoes
-                    .Where(d => d.DoadorId == doador.Id)
-                    .OrderByDescending(d => d.Data)
-                    .FirstOrDefaultAsync();
-
+                var ultimaDoacao = await _repDonation.GetByDoador(doador.Id);
+                
                 if (ultimaDoacao != null && (DateTime.Today - ultimaDoacao.Data).TotalDays < 90)
                 {
                     return ResultViewModel<int>.Error("Mulheres só podem doar de 90 em 90 dias.");
@@ -49,10 +49,7 @@ namespace BloodBank.Application.Commands.InsertDoacao
 
             if (doador.Genero.ToLower() == "masculino")
             {
-                var ultimaDoacao = await _db.Doacoes
-                    .Where(d => d.DoadorId == doador.Id)
-                    .OrderByDescending(d => d.Data)
-                    .FirstOrDefaultAsync();
+                var ultimaDoacao = await _repDonation.GetByDoador(doador.Id);
 
                 if (ultimaDoacao != null && (DateTime.Today - ultimaDoacao.Data).TotalDays < 60)
                 {
@@ -67,8 +64,7 @@ namespace BloodBank.Application.Commands.InsertDoacao
 
             var doacao = request.ToEntity();
 
-            await _db.Doacoes.AddAsync(doacao);
-            await _db.SaveChangesAsync();
+            await _repDonation.Insert(doacao);
 
             return ResultViewModel<int>.Success(doacao.Id);
         }

@@ -1,24 +1,26 @@
 ﻿using BloodBank.Application.Models;
-using BloodBank.Infrastructure.Persistence;
+using BloodBank.Core.Repositories;
 using MediatR;
-using Microsoft.EntityFrameworkCore;
+using System.Linq;
 
 namespace BloodBank.Application.Query.GetDoacoesAll
 {
-    public class GetDoacoesAllHandler(BloodBankDbContext db) : IRequestHandler<GetDoacoesAllQuery, ResultViewModel<List<DoacoesItemViewModel>>>
+    public class GetDoacoesAllHandler : IRequestHandler<GetDoacoesAllQuery, ResultViewModel<List<DoacoesItemViewModel>>>
     {
-        private readonly BloodBankDbContext _db = db;
+        private readonly IDoacaoRepository _repository;
+        public GetDoacoesAllHandler(IDoacaoRepository repository)
+        {
+            _repository = repository;
+        }
 
         public async Task<ResultViewModel<List<DoacoesItemViewModel>>> Handle(GetDoacoesAllQuery request, CancellationToken cancellationToken)
         {
-            var doacoes = await _db.Doacoes
-               .Include(d => d.Doador)
-               .ToListAsync();
+            var doacoes = await _repository.GetAll();
 
-            if (doacoes is null)
-                ResultViewModel<List<DoacoesItemViewModel>>.Error("Não existem doações.");
+            if (doacoes == null)
+                return ResultViewModel<List<DoacoesItemViewModel>>.Error("Não existem doações.");
 
-            var model = doacoes.Select(DoacoesItemViewModel.FromEntity).ToList();
+            var model = doacoes.Select(DoacoesItemViewModel.ToEntity).ToList();
 
             return ResultViewModel<List<DoacoesItemViewModel>>.Success(model);
         }

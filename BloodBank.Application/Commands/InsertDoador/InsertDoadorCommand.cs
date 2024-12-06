@@ -28,7 +28,7 @@ namespace BloodBank.Application.Commands.InsertDoador
         public FatorRh FatorRh { get; set; }
         public Endereco Endereco { get; set; }
 
-        public Doador ToEntity()
+        public Core.Entities.Doador ToEntity()
             => new(NomeCompleto, Email, DataNascimento, Genero, Peso, Endereco, TipoSanguineo, FatorRh);
     }
 }
