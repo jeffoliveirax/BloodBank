@@ -10,10 +10,10 @@
             Volume = volume;
         }
 
-        public int DoadorId { get; private set; }
-        public DateTime Data { get; private set; }
-        public decimal Volume { get; private set; }
-        public Doador Doador { get; private set; }
+        public int DoadorId { get; set; }
+        public DateTime Data { get; set; }
+        public decimal Volume { get; set; }
+        public Doador Doador { get; set; }
 
         public void Update(int doadorId, decimal volume)
         {
