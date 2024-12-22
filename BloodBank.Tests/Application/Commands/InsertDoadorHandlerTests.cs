@@ -62,6 +62,7 @@ namespace BloodBank.Tests.Application.Commands
             // Assert
             Assert.True(result.IsSuccess);
 
+            _repositoryMock.Verify(repo => repo.Exists(It.IsAny<string>()), Times.Once);
             _repositoryMock.Verify(repo => repo.Insert(It.IsAny<Doador>()), Times.Once);
         }
 
