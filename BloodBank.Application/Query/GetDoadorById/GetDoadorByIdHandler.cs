@@ -13,14 +13,14 @@ namespace BloodBank.Application.Query.GetDoadorById
             _repository = repository;
         }
 
-        public async Task<ResultViewModel<Core.Entities.Doador>> Handle(GetDoadorByIdQuery request, CancellationToken cancellationToken)
+        public async Task<ResultViewModel<Doador>> Handle(GetDoadorByIdQuery request, CancellationToken cancellationToken)
         {
             var doador = await _repository.GetById(request.Id);
 
             if (doador is null)
-                return ResultViewModel<Core.Entities.Doador>.Error("Não há doador cadastrado com esse Id.");
+                return ResultViewModel<Doador>.Error("Não há doador cadastrado com esse Id.");
 
-            return ResultViewModel<Core.Entities.Doador>.Success(doador);
+            return ResultViewModel<Doador>.Success(doador);
         }
     }
 }
