@@ -1,22 +1,19 @@
 ﻿using BloodBank.Application.Models;
 using BloodBank.Core.Entities;
 using BloodBank.Core.Repositories;
-using BloodBank.Infrastructure.Persistence;
 using MediatR;
 
 namespace BloodBank.Application.Query.GetDoadoresAll
 {
     public class GetDoadoresAllHandler : IRequestHandler<GetDoadoresAllQuery, ResultViewModel<List<Core.Entities.Doador>>>
     {
-        private readonly BloodBankDbContext _db;
         private readonly IDoadorRepository _repository;
-        public GetDoadoresAllHandler(BloodBankDbContext db, IDoadorRepository repository)
+        public GetDoadoresAllHandler(IDoadorRepository repository)
         {
-            _db = db;
             _repository = repository;
         }
 
-        public async Task<ResultViewModel<List<Core.Entities.Doador>>> Handle(GetDoadoresAllQuery request, CancellationToken cancellationToken)
+        public async Task<ResultViewModel<List<Doador>>> Handle(GetDoadoresAllQuery request, CancellationToken cancellationToken)
         {
             var pageSize = request.PageSize;
             var pageNumber = request.PageNumber;
@@ -38,6 +35,7 @@ namespace BloodBank.Application.Query.GetDoadoresAll
             };
 
             return ResultViewModel<List<Doador>>.Success(response.Data);
+            //return ResultViewModel<List<Doador>>.Success(new List<Doador>()); //fazer o teste falhar
         }
     }
 }
